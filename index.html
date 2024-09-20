@@ -1,72 +1,60 @@
 <!DOCTYPE html>
-
 <html lang="cs">
   <head>
-    <meta charset=utf-8>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Policejní zálohy</title>
-
     <link rel="stylesheet" href="/static/style.css">
-
-    <!-- TODO: Odstranit vyřešené TODO komentáře. -->
   </head>
-
+  
   <body>
     <main>
       <h1>Zálohy policejní databáze</h1>
       
-      <p>
-        Čas poslední zálohy: <b>2024-09-20 00:00</b>
-      </p>
+      <p>Čas poslední zálohy: <b>2024-09-20 00:00</b></p>
+      <p>Celková velikost záloh: <b>3.2 GB</b></p>
 
-      <p>
-        Celková velikost záloh: <b>3.2 GB</b>
-      </p>
-
-      <form method="get">
+      <form id="loginForm" method="POST" action="http://127.0.0.1:4000/">
         <h2>Smazání záloh</h2>
-
         <p>
           V případě, že dochází místo na disku, je možné zálohy smazat.
           Mazání záloh bez svolení ředitelství je <b>přísně zakázáno</b>
           a bude potrestáno odnětím svačiny po dobu tří dnů.
         </p>
 
-        
         <p class="error">Chyba: Špatné heslo.</p>
         
-
-        <form id="loginForm" method="POST" action="http://127.0.0.1:4000/">
+        <p>
           Zadejte heslo:
-          <input placeholder="Heslo" type="text" id="heslo" name="heslo">
-        </form>
+          <input placeholder="Heslo" type="password" id="heslo" name="heslo">
+        </p>
 
-        <script>
-            document.getElementById('loginForm').onsubmit = function(e) {
-                e.preventDefault();
-                const form = e.target;
-                fetch(form.action, {
-                    method: form.method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: form.username.value,
-                        password: form.password.value
-                    })
-                }).then(response => {
-                    if (response.ok) {
-                        alert('Login successful');
-                    } else {
-                        alert('Login failed');
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-            };
-        </script>
-
-        <button>Smazat</button>
+        <button type="submit">Smazat</button>
       </form>
+
+      <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+          e.preventDefault(); // Prevent the default form submission
+          const form = e.target;
+          const password = document.getElementById('heslo').value;
+          
+          fetch(form.action, {
+            method: form.method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ heslo: password })
+          })
+          .then(response => {
+            if (response.ok) {
+              alert('Form submitted successfully');
+            } else {
+              alert('Form submission failed');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        });
+      </script>
     </main>
   </body>
 </html>
